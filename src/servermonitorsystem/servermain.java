@@ -15,7 +15,11 @@ import java.awt.Color;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JTable;
-
+import java.awt.event.ActionListener;
+import java.net.UnknownHostException;
+import java.awt.event.ActionEvent;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 public class servermain extends JFrame {
 
 	private JPanel contentPane;
@@ -81,6 +85,19 @@ public class servermain extends JFrame {
 		contentPane.add(textField_portserver);
 		
 		JButton btnNewButton = new JButton("");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String kq="";
+				try {
+					InetAddress addr = InetAddress.getLocalHost();
+					kq=addr.getHostAddress();
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				textField_ipserver.setText(kq);
+			}
+		});
 		btnNewButton.setIcon(new ImageIcon(servermain.class.getResource("/iconserver/icon_start.png")));
 		btnNewButton.setBounds(32, 39, 72, 72);
 		contentPane.add(btnNewButton);
@@ -92,5 +109,10 @@ public class servermain extends JFrame {
 		table = new JTable();
 		table.setBounds(196, 145, 543, 260);
 		contentPane.add(table);
+	}
+
+	protected servermonitorsystem.serverprocess serverprocess() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -12,14 +12,25 @@ import javax.swing.SwingConstants;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Color;
+
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JList;
 import javax.swing.JTable;
 import java.awt.event.ActionListener;
 import java.net.UnknownHostException;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.UnknownHostException;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+
 public class servermain extends JFrame {
 
 	private JPanel contentPane;
@@ -84,27 +95,75 @@ public class servermain extends JFrame {
 		textField_portserver.setBounds(607, 72, 132, 20);
 		contentPane.add(textField_portserver);
 		
+		JList list = new JList();
+		list.setBounds(32, 144, 132, 261);
+		contentPane.add(list);
+		
 		JButton btnNewButton = new JButton("");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String kq="";
 				try {
 					InetAddress addr = InetAddress.getLocalHost();
-					kq=addr.getHostAddress();
+					kq=addr.getHostAddress();					
+					
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
+				
+				int portsv =9999;
 				textField_ipserver.setText(kq);
+				textField_portserver.setText(portsv+"");
+				ServerSocket langnghe = null;
+				String dataa;
+				BufferedReader dongvao;
+				BufferedWriter dongra;
+				Socket socketOfServer = null;
+				/*
+				try {
+					langnghe = new ServerSocket(portsv);
+					
+				}catch(IOException ee)
+				{
+					System.out.println(ee);
+					System.exit(1);
+				}
+				
+				try {
+					socketOfServer = langnghe.accept();
+					System.out.println("chap nhan ket noi");
+					
+					dongvao = new BufferedReader(new InputStreamReader(socketOfServer.getInputStream()));
+					dongra = new BufferedWriter(new OutputStreamWriter(socketOfServer.getOutputStream()));
+					Vector<String> ds = new Vector<String>();
+					
+					while(true) {
+						dataa = dongvao.readLine();
+						ds.add(dataa);
+						list.setListData(ds);
+	
+						dongra.write(">>" + dataa);
+						
+						dongra.newLine();
+						dongra.flush();
+						break;
+					}
+				}catch(IOException eee)
+				{
+					 System.out.println(eee);
+			         eee.printStackTrace();
+					
+				}
+				*/
 			}
 		});
+				 
 		btnNewButton.setIcon(new ImageIcon(servermain.class.getResource("/iconserver/icon_start.png")));
 		btnNewButton.setBounds(32, 39, 72, 72);
 		contentPane.add(btnNewButton);
 		
-		JList list = new JList();
-		list.setBounds(32, 144, 132, 261);
-		contentPane.add(list);
+		
 		
 		table = new JTable();
 		table.setBounds(196, 145, 543, 260);

@@ -27,9 +27,16 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.awt.SystemColor;
+import java.awt.Window.Type;
 
 public class servermain extends JFrame {
 
@@ -37,6 +44,7 @@ public class servermain extends JFrame {
 	private JTextField textField_ipserver;
 	private JTextField textField_portserver;
 	private JTable table;
+	private JTable table_1;
 
 	/**
 	 * Launch the application.
@@ -58,8 +66,10 @@ public class servermain extends JFrame {
 	 * Create the frame.
 	 */
 	public servermain() {
+		setTitle("SERVER MONITORING SYSTEM");
+		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 780, 569);
+		setBounds(40, 40, 780, 780);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -67,8 +77,8 @@ public class servermain extends JFrame {
 		
 		JLabel lbl_tieude = new JLabel("SERVER MONITORING SYSTEM");
 		lbl_tieude.setHorizontalAlignment(SwingConstants.LEFT);
-		lbl_tieude.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lbl_tieude.setBounds(196, 11, 303, 46);
+		lbl_tieude.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lbl_tieude.setBounds(196, 11, 543, 46);
 		contentPane.add(lbl_tieude);
 		
 		JLabel lbl_ipserver = new JLabel("IP SERVER :");
@@ -96,78 +106,126 @@ public class servermain extends JFrame {
 		contentPane.add(textField_portserver);
 		
 		JList list = new JList();
-		list.setBounds(32, 144, 132, 261);
+		list.setBounds(32, 156, 239, 200);
 		contentPane.add(list);
 		
-		JButton btnNewButton = new JButton("");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				String kq="";
-				try {
-					InetAddress addr = InetAddress.getLocalHost();
-					kq=addr.getHostAddress();					
-					
-				} catch (UnknownHostException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				int portsv =9999;
-				textField_ipserver.setText(kq);
-				textField_portserver.setText(portsv+"");
-				ServerSocket langnghe = null;
-				String dataa;
-				BufferedReader dongvao;
-				BufferedWriter dongra;
-				Socket socketOfServer = null;
-				/*
-				try {
-					langnghe = new ServerSocket(portsv);
-					
-				}catch(IOException ee)
-				{
-					System.out.println(ee);
-					System.exit(1);
-				}
-				
-				try {
-					socketOfServer = langnghe.accept();
-					System.out.println("chap nhan ket noi");
-					
-					dongvao = new BufferedReader(new InputStreamReader(socketOfServer.getInputStream()));
-					dongra = new BufferedWriter(new OutputStreamWriter(socketOfServer.getOutputStream()));
-					Vector<String> ds = new Vector<String>();
-					
-					while(true) {
-						dataa = dongvao.readLine();
-						ds.add(dataa);
-						list.setListData(ds);
-	
-						dongra.write(">>" + dataa);
-						
-						dongra.newLine();
-						dongra.flush();
-						break;
-					}
-				}catch(IOException eee)
-				{
-					 System.out.println(eee);
-			         eee.printStackTrace();
-					
-				}
-				*/
-			}
-		});
+		JButton btnStart = new JButton("START SERVER");
+		btnStart.setForeground(Color.GREEN);
+		btnStart.setFont(new Font("Tahoma", Font.BOLD, 12));
 				 
-		btnNewButton.setIcon(new ImageIcon(servermain.class.getResource("/iconserver/icon_start.png")));
-		btnNewButton.setBounds(32, 39, 72, 72);
-		contentPane.add(btnNewButton);
+		btnStart.setIcon(null);
+		btnStart.setBounds(32, 52, 132, 26);
+		//btnStop.setOpaque(false);
+		//btnStop.setContentAreaFilled(false);
+		//btnStop.setBorderPainted(false);
+		
+		contentPane.add(btnStart);
 		
 		
 		
 		table = new JTable();
-		table.setBounds(196, 145, 543, 260);
+		table.setBounds(291, 157, 448, 200);
 		contentPane.add(table);
+		
+		JButton btnStop = new JButton("STOP SERVER");
+		btnStop.setForeground(Color.RED);
+		btnStop.setFont(new Font("Tahoma", Font.BOLD, 12));
+		btnStop.setBounds(32, 89, 132, 26);
+		contentPane.add(btnStop);
+		
+		JLabel lbl_ipserver_1 = new JLabel("CLIENT LIST");
+		lbl_ipserver_1.setHorizontalAlignment(SwingConstants.LEFT);
+		lbl_ipserver_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lbl_ipserver_1.setBounds(32, 126, 132, 26);
+		contentPane.add(lbl_ipserver_1);
+		
+		JLabel lbl_ipserver_1_1 = new JLabel("CLIENT FOLDER");
+		lbl_ipserver_1_1.setHorizontalAlignment(SwingConstants.LEFT);
+		lbl_ipserver_1_1.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lbl_ipserver_1_1.setBounds(291, 126, 132, 26);
+		contentPane.add(lbl_ipserver_1_1);
+		
+		JLabel lbl_ipserver_1_2 = new JLabel("CLIENT LOG");
+		lbl_ipserver_1_2.setHorizontalAlignment(SwingConstants.LEFT);
+		lbl_ipserver_1_2.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lbl_ipserver_1_2.setBounds(32, 379, 132, 26);
+		contentPane.add(lbl_ipserver_1_2);
+		
+		table_1 = new JTable();
+		table_1.setBounds(32, 416, 707, 302);
+		contentPane.add(table_1);
+		
+		String kq="";
+		try {
+			InetAddress addr = InetAddress.getLocalHost();
+			kq=addr.getHostAddress();					
+			
+		} catch (UnknownHostException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		int portsv =9999;
+		textField_ipserver.setText(kq);
+		textField_portserver.setText(portsv+"");
+		
+		JLabel lbl_messs = new JLabel("mess : ");
+		lbl_messs.setHorizontalAlignment(SwingConstants.LEFT);
+		lbl_messs.setFont(new Font("Tahoma", Font.BOLD, 12));
+		lbl_messs.setBounds(498, 120, 241, 26);
+		contentPane.add(lbl_messs);
+		
+		btnStart.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				try
+				{
+					ServerSocket langnghe1 = new ServerSocket(portsv);
+					
+					
+					while(true)
+					{
+						Socket soc=langnghe1.accept(); //synchronous
+						ObjectOutputStream obo = new ObjectOutputStream(soc.getOutputStream());
+						ObjectInputStream obi = new ObjectInputStream(soc.getInputStream());
+						
+						int j =0;
+						while(true)
+						{
+							
+							
+							String mess = "server xin chao "+j;
+							obo.writeObject(mess);
+							
+							
+							try {
+								String mess_re = (String)obi.readObject();
+								
+								lbl_messs.setText(mess_re);
+								try {
+									Thread.sleep(500);
+								} catch (InterruptedException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+								
+							} catch (ClassNotFoundException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							
+							j++;
+						}
+					}
+					
+					
+				}
+				catch(IOException e1)
+				{
+					System.out.println("There're some error");
+				}
+			}
+		});
 	}
 
 	protected servermonitorsystem.serverprocess serverprocess() {
